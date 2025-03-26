@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import { unique } from "next/dist/build/utils";
-import { type } from "os";
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -23,6 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   isAdmin: {
     type: Boolean,
+    default:false
   },
   verifyToken: String,
   verifyTokenExpiry: Date,
@@ -30,5 +29,5 @@ const userSchema = new mongoose.Schema({
   ForgotPasswordTokenExpiry: Date,
 });
 
-const User=  mongoose.models.users || mongoose.model("users",userSchema);
+const User = mongoose.models.users || mongoose.model("users", userSchema);
 export default User;

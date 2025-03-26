@@ -1,15 +1,16 @@
-import connectDb from "@/dbConnection/dbConnection";
-import { sendEmail } from "@/helpers/mailer";
 import User from "@/models/user.Model"; /* we need user model for sign-up */
-import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import bcryptjs from "bcryptjs";
+import  {sendEmail}  from "@/helpers/mailer";
+import connectDb from "@/dbConnection/dbConnection";
+
 connectDb(); /* connected to database */
 
-export async function post(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { username, email, password } = reqBody;
-    //  validation libraries like zod and yup to validate password length
+    //  validation libraries like zod and yup to validate password length .currently we dont use it
     console.log(reqBody);
 
     const user = await User.findOne({ email });
@@ -32,7 +33,7 @@ export async function post(request: NextRequest) {
       password: hashedPassword,
     });
 
-    const signupUser = newUser.save();
+    const signupUser = await newUser.save();
     console.log(signupUser);
 
     //  sending verification email using nodemailer
@@ -43,7 +44,8 @@ export async function post(request: NextRequest) {
       success: true,
       signupUser,
     });
-  } catch (error: any) {
+  } 
+  catch (error: any) {
     return NextResponse.json(
       { errordescription: error.message },
       { status: 500 }
