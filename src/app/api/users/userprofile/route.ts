@@ -1,29 +1,37 @@
-import User from "@/models/user.Model"; /* we need user model for sign-up */
+import User from "@/models/user.Model";
 import { NextRequest, NextResponse } from "next/server";
-import bcryptjs from "bcryptjs";
-import { sendEmail } from "@/helpers/mailer";
-import connectDb from "@/dbConnection/dbConnection";
 import jwt from "jsonwebtoken";
 
-connectDb();
+import connectDb from "@/dbConnection/dbConnection";
 
-const getDetails = (request: NextRequest) => {
+connectDb();
+const getIdFromToken = (request: NextRequest) => {
   try {
     const token = request.cookies.get("token")?.value || "";
-    const decodedToken: any = jwt.verify(token, process.env.TOKEN_SECRET!);
+    const decodedToken: any = jwt.verify(
+      token,
+      process.env.TOKEN_SECRET!
+    ); /* THE PAYLOAD DATA WE HAVE SEND USING JWT.SIGN AND JWT.VERIFY VERIFY TOKEN AND RETURN THE PAYLOAD DATA ,SO WE SAVE THAT PAYLOAD DATA IN DECODED TOKEN VARIABLE  */
+    console.log(decodedToken.id);
     return decodedToken.id;
   } catch (error: any) {
     throw new Error(error.message);
   }
 };
 
-export async function POST(request: NextRequest) {
-  const userId = await getDetails(request);
-  const user = User.findOne({ _id: userId }).select("-password -email");
-  User.findById(userId).select("-password -email");
-
-  return NextResponse.json(
-    { message: "User found", success: true, data: user },
-    { status: 400 }
-  );
+export async function GET(request: NextRequest) {
+  try {
+    const userId = await getIdFromToken(request);
+    // const user = await User.findOne({ _id: userId }).select("-password -email");
+    const user = await User.findById(userId).select("-password -email");
+    return NextResponse.json({
+      message: "User found",
+      data: user,
+    });
+  } catch (error: any) {
+    return NextResponse.json({
+      errordescription: error.message,
+      status: 500,
+    });
+  }
 }

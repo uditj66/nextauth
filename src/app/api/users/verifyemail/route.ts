@@ -11,12 +11,12 @@ export async function POST(request: NextRequest) {
     console.log(token);
     const user = await User.findOne({
       verifyToken: token,
-      verifyTokenExpiry: { $gt: Date.now() },
+      verifyTokenExpiry: { $gt: Date.now() }
     });
 
     if (!user) {
       return NextResponse.json({
-        message: "User doesn't exist",
+        message: "Invalid Token",
         status: 400,
       });
     }

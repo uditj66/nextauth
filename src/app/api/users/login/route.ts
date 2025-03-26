@@ -3,7 +3,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "@/models/user.Model";
 import { NextRequest, NextResponse } from "next/server";
-import { error } from "console";
+
 connectDb();
 
 export async function POST(request: NextRequest) {
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set("token", token, {
       httpOnly: true,
+      secure:true
     });
 
     return response;

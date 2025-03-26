@@ -8,7 +8,6 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
     const hashedToken = await bcryptjs.hash(userId.toString(), 10);
     if (emailType === "VERIFY") {
       await User.findByIdAndUpdate(userId, {
-
         //  adding the token value and its expiry  in our database
         verifyToken: hashedToken,
         verifyTokenExpiry: Date.now() + 3600000,
