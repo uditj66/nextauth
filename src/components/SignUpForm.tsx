@@ -8,8 +8,39 @@ import {
   IconBrandGoogle,
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
+import Link from "next/link";
 
-export function SignupForm() {
+type SignUpProp = {
+  user: {
+    username: string;
+    email: string;
+    password: string;
+  };
+  setUser: (value: {
+    username: string;
+    email: string;
+    password: string;
+  }) => void;
+  onSignUp: (value: any) => void;
+  buttondisabled: boolean;
+  // setbuttonDisabled: (value: any) => void;
+  loading: boolean;
+  // setLoading: (value: any) => void;
+};
+
+export function SignupForm({
+  user,
+  setUser,
+  onSignUp,
+  buttondisabled,
+
+  loading,
+  
+}: SignUpProp) {
+  // const handleloading=()=>{
+  //   setLoading(true);
+  // }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
@@ -23,42 +54,54 @@ export function SignupForm() {
         Login to aceternity if you can because we don&apos;t have a login flow
         yet
       </p>
-
+      <h1 className="text-center">
+        {loading ? "processing..." : "No processing"}
+      </h1>
+      {/* <button onClick={onSignUp}>click on loading</button> */}
       <form className="my-8" onSubmit={handleSubmit}>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Tyler" type="text" />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Durden" type="text" />
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              value={user.username}
+              onChange={(e) => setUser({ ...user, username: e.target.value })}
+              placeholder="abcxyz123"
+              type="text"
+            />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input
+            id="email"
+            value={user.email}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            placeholder="projectmayhem@fc.com"
+            type="email"
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="twitterpassword">Your twitter password</Label>
           <Input
-            id="twitterpassword"
+            id="password"
+            value={user.password}
+            onChange={(e) => setUser({ ...user, password: e.target.value })}
             placeholder="••••••••"
-            type="twitterpassword"
+            type="password"
           />
         </LabelInputContainer>
 
         <button
           className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
           type="submit"
+          onClick={onSignUp}
         >
-          Sign up &rarr;
+          {buttondisabled ? "NoSignup" : "SignUp"}&rarr;
           <BottomGradient />
         </button>
+        {/* <Link href={"/login"}> Sign up &rarr;</Link> */}
+        <p className="text-center m-2">already a member ? <Link href={"/login"} className="text-blue-500">login</Link></p>
 
         <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
 
