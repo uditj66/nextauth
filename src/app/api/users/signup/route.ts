@@ -1,7 +1,7 @@
 import User from "@/models/user.Model"; /* we need user model for sign-up */
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
-import  {sendEmail}  from "@/helpers/mailer";
+import { sendEmail } from "@/helpers/mailer";
 import connectDb from "@/dbConnection/dbConnection";
 
 connectDb(); /* connected to database */
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const user = await User.findOne({ email });
     if (user) {
       console.log("user already exists");
-      
+
       return NextResponse.json(
         { error: "user already exists" },
         { status: 400 }
@@ -41,13 +41,15 @@ export async function POST(request: NextRequest) {
     //  sending verification email using nodemailer
     await sendEmail({ email, emailType: "VERIFY", userId: signupUser._id });
 
-    return NextResponse.json({
-      message: "user registered successfully",
-      success: true,
-      signupUser,
-    });
-  } 
-  catch (error: any) {
+    return NextResponse.json(
+      {
+        message: "user registered successfully",
+        success: true,
+        signupUser,
+      },
+      { status: 500 }
+    );
+  } catch (error: any) {
     return NextResponse.json(
       { errordescription: error.message },
       { status: 500 }
